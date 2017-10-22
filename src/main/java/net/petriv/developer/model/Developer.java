@@ -2,19 +2,21 @@ package main.java.net.petriv.developer.model;
 
 import java.math.BigDecimal;
 import java.util.Set;
+import java.util.TreeSet;
 
 public class Developer {
-    private long id;
+    private int id;
     private String firstName;
     private String lastName;
     private String specialty;
     private Set<Skill> skills;
-    private BigDecimal salary;
+    private int salary;
 
     public Developer() {
+        skills = new TreeSet<>();
     }
 
-    public Developer(long id, String firstName, String lastName, String specialty, Set<Skill> skills, BigDecimal salary) {
+    public Developer(int id, String firstName, String lastName, String specialty, int salary){//, Set<Skill> skills) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -23,11 +25,11 @@ public class Developer {
         this.salary = salary;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -59,15 +61,16 @@ public class Developer {
         return skills;
     }
 
-    public void setSkills(Set<Skill> skills) {
-        this.skills = skills;
+    public void setSkills(Skill skills) {
+
+        this.skills.add(skills);
     }
 
-    public BigDecimal getSalary() {
+    public int getSalary() {
         return salary;
     }
 
-    public void setSalary(BigDecimal salary) {
+    public void setSalary(int salary) {
         this.salary = salary;
     }
 
