@@ -1,18 +1,27 @@
 package main.java.net.petriv.developer.test;
 
-import main.java.net.petriv.developer.build.developers.ConcreteDeveloper;
-import main.java.net.petriv.developer.build.developers.DirectorDeveloper;
 import main.java.net.petriv.developer.dao.DeveloperDAOImp;
+import main.java.net.petriv.developer.dao.SkillDAO;
 import main.java.net.petriv.developer.model.Developer;
+import main.java.net.petriv.developer.model.Skill;
 
 public class Test {
     public static void main(String[] args) {
-        DirectorDeveloper director = new DirectorDeveloper();
-        director.setBuilder(new ConcreteDeveloper());
-        Developer developer = director.buildDeveloper();
-        System.out.println(developer);
 
+        //Skill skill = new Skill(1,"JAVA");
+        //Skill skill2 = new Skill(2,"SQL");
         DeveloperDAOImp daoImp = new DeveloperDAOImp();
+        Developer developer = new Developer(1, "Myola", "Petriv", "Java", 85,daoImp.getSkillsForDeveloper("1, 2") );
+
         daoImp.save(developer);
+
+SkillDAO skillDAO = new SkillDAO();
+//skillDAO.save(skill);
+//skillDAO.save(skill2);
+
+        System.out.println(daoImp.listSkills(daoImp.getSkillsForDeveloper("1, 2")));
+
+
+
     }
 }

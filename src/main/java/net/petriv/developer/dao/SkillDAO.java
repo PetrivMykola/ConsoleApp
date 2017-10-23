@@ -1,22 +1,25 @@
 package main.java.net.petriv.developer.dao;
 
+
 import main.java.net.petriv.developer.exceptions.*;
-import main.java.net.petriv.developer.model.Developer;
 import main.java.net.petriv.developer.model.Skill;
 
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
-public class DeveloperDAOImp implements DAO<Developer> {
+public class SkillDAO implements DAO<Skill> {
 
-    static File file;
-    String path = ".\\resources\\developers.txt";
-    List<Developer> listDev;
+    File file;
+    String path = ".\\resources\\skils.txt";
+    List<Skill> listSkill;
+    Set<String> setDev;
     Checker checker;
 
-    public DeveloperDAOImp() {
-        checker = new Checker(path);
+    public SkillDAO() {
         file = new File(path);
+        checker = new Checker(path);
         try {
             file.createNewFile();
         } catch (IOException e) {
@@ -25,13 +28,9 @@ public class DeveloperDAOImp implements DAO<Developer> {
     }
 
     @Override
-    public void save(Developer v) {
-        checker.checkId(v.getId());
+    public void save(Skill v) {
         try(FileWriter writer = new FileWriter(file, true)) {
-            writer.write(v.getId() + ", " + v.getFirstName() +
-                    ", " + v.getLastName() + ", " + v.getSpecialty() + ", " +
-                     + v.getSalary() + ", " + "Skills: " + listSkills(v.getSkills()) + System.lineSeparator());
-            writer.flush();
+            writer.write(v.getId() + ", " + v.getName() + System.lineSeparator());
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
@@ -40,10 +39,10 @@ public class DeveloperDAOImp implements DAO<Developer> {
     }
 
     @Override
-    public Developer getById(int id) {
+    public Skill getById(int id) {
         String line = "";
         String readLine = "";
-
+        checker.checkId(id);
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
 
             while ((line = reader.readLine()) != null) {
@@ -54,32 +53,31 @@ public class DeveloperDAOImp implements DAO<Developer> {
         } catch (IOException | NullPointerException | NotFoundIdException e) {
             System.out.println(e.getMessage());
         }
-        return createDevFromStr(readLine);
+        return createSkillFromStr(readLine);
     }
 
 
     @Override
-    public List<Developer> getAll() {
+    public List<Skill> getAll() {
         String line;
-        listDev = new ArrayList<>();
+        listSkill = new ArrayList<>();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             checker.checkFile(file);
 
             while ((line = reader.readLine()) != null) {
-                listDev.add(createDevFromStr(line));
+                listSkill.add(createSkillFromStr(line));
             }
         } catch (IOException | EmptyFileException e) {
             System.out.println(e.getMessage());
         }
-        return listDev;
+        return listSkill;
     }
 
     @Override
     public void delete(int id) {
         String line;
         File tempFile = new File(file.getAbsolutePath() + ".tmp");
-
         try (BufferedReader reader = new BufferedReader(new FileReader(file));
              FileWriter newFileWriter = new FileWriter(tempFile)) {
             checker.checkFile(file);
@@ -104,11 +102,11 @@ public class DeveloperDAOImp implements DAO<Developer> {
     }
 
     @Override
-    public void update(Developer v) {
+    public void update(Skill v) {
         try {
             if(checker.isExistEntityInFileById(v.getId())) {
                 delete(v.getId());
-                Developer newDev = v;
+                Skill newDev = v;
                 save(newDev);
 
             } else throw new NotFoundIdException("Cannot find developers in file for update");
@@ -117,43 +115,10 @@ public class DeveloperDAOImp implements DAO<Developer> {
         }
     }
 
-    public Developer createDevFromStr(String str) {
+    public Skill createSkillFromStr(String str) {
         String[] arrayWords = str.split(", ");
-        Developer dev = new Developer(Integer.valueOf(arrayWords[0]), arrayWords[1], arrayWords[2],
-                arrayWords[3], Integer.valueOf(arrayWords[4]));   // setDev.add(arrayWords[5]));
-        return dev;
+        Skill newSkill = new Skill(Integer.valueOf(arrayWords[0]), arrayWords[1]);
+        return newSkill;
     }
 
-    public Set<Skill> getSkillsForDeveloper(String devSkills) {
-        String[] arrayIdSkills = devSkills.split(", ");
-        String line = "";
-        String readLine = "";
-        Set<Skill> skillSet = new HashSet<>();
-        int i = 0;
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(".\\resources\\skils.txt"))) {
-
-                while ((line = reader.readLine()) != null & (i < arrayIdSkills.length) ) {
-
-                        if (Character.getNumericValue(line.charAt(0)) ==  Integer.valueOf(arrayIdSkills[i])) {
-                            readLine = line;
-                            String[] arrayWords = readLine.split(", ");
-                            skillSet.add(new Skill(Integer.valueOf(arrayWords[0]), arrayWords[1]));
-                            i++;
-                        }
-                }
-            } catch(IOException | NullPointerException | NotFoundIdException | IndexOutOfBoundsException e){
-                System.out.println(e.getMessage());
-            }
-        return skillSet;
-    }
-
-    public String listSkills(Set<Skill> skillSet) {
-        String skill="";
-        for (Iterator iter = skillSet.iterator(); iter.hasNext();) {
-            skill += iter.next();
-        }
-        return skill;
-    }
 }
-

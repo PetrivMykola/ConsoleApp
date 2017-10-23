@@ -12,16 +12,21 @@ public class Developer {
     private Set<Skill> skills;
     private int salary;
 
-    public Developer() {
-        skills = new TreeSet<>();
-    }
 
-    public Developer(int id, String firstName, String lastName, String specialty, int salary){//, Set<Skill> skills) {
+    public Developer(int id, String firstName, String lastName, String specialty, int salary, Set<Skill> skills) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.specialty = specialty;
         this.skills = skills;
+        this.salary = salary;
+    }
+
+    public Developer(int id, String firstName, String lastName, String specialty, int salary) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.specialty = specialty;
         this.salary = salary;
     }
 
