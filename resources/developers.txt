@@ -1,1 +1,2 @@
-1, Myola, Petriv, Java, 85, Skills: JAVA, SQL, 
+1, Mykola, Petriv, Java, 8000, SkillsID: 1, 2, 
+2, Mykola, Petriv, Java, 8000, SkillsID: 1, 

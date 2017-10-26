@@ -6,8 +6,9 @@ public class Skill {
 
     public Skill() { }
 
-    public Skill(String name) {
-        this.name = name;
+
+    public Skill(int id) {
+        this.id = id;
     }
 
     public Skill(int id, String name) {
@@ -33,6 +34,8 @@ public class Skill {
 
     @Override
     public String toString() {
-        return name + ", " ;
+        return
+                "id=" + id +
+                ", name='" + name + '\'';
     }
 }

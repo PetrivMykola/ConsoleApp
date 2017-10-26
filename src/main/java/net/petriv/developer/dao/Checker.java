@@ -21,8 +21,13 @@ public class Checker{
         String line;
         try (BufferedReader read = new BufferedReader(new FileReader(file))) {
             if (file.length() != 0  ) {
+
                 while ((line = read.readLine()) != null) {
-                    if (((Character.getNumericValue(line.charAt(0)) == id)))
+                    line = line.replaceAll("[^a-zA-Z0-9]", " ");
+                    line.trim();
+                    String arrReadLine[] = line.split("  ");
+
+                    if (Integer.valueOf(arrReadLine[0]) == id)
                         throw new IdAlredyExistException("Id should be unique");
                 }
             }
@@ -43,7 +48,12 @@ public class Checker{
             checkFile(file);
 
             while ((line = reader.readLine()) != null) {
-                if (Character.getNumericValue(line.charAt(0)) == id) {
+
+                line = line.replaceAll("[^a-zA-Z0-9]", " ");
+                line.trim();
+                String arrReadLine[] = line.split("  ");
+
+                if (Integer.valueOf(arrReadLine[0]) == id) {
                     result = true;
                 }
             }

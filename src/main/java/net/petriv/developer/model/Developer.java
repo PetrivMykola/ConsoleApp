@@ -12,6 +12,11 @@ public class Developer {
     private Set<Skill> skills;
     private int salary;
 
+    public Developer(int id, String firstName, String lastName) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 
     public Developer(int id, String firstName, String lastName, String specialty, int salary, Set<Skill> skills) {
         this.id = id;
@@ -66,9 +71,8 @@ public class Developer {
         return skills;
     }
 
-    public void setSkills(Skill skills) {
-
-        this.skills.add(skills);
+    public void setSkills(Set<Skill> skills) {
+        this.skills = skills;
     }
 
     public int getSalary() {
@@ -86,8 +90,7 @@ public class Developer {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", specialty='" + specialty + '\'' +
-                ", skills=" + skills +
-                ", salary=" + salary +
+                ", salary=" + salary + ", " + "Skills: " + skills +
                 '}';
     }
 }

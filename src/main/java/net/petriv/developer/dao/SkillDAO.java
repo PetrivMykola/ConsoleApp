@@ -14,7 +14,6 @@ public class SkillDAO implements DAO<Skill> {
     File file;
     String path = ".\\resources\\skils.txt";
     List<Skill> listSkill;
-    Set<String> setDev;
     Checker checker;
 
     public SkillDAO() {

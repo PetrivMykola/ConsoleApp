@@ -3,21 +3,26 @@ package main.java.net.petriv.developer.model;
 import java.util.Set;
 
 public class Company {
-    private Long id;
+    private int id;
     private String name;
     private Set<Project> projects;
 
-    public Company(Long id, String name, Set<Project> projects) {
+    public Company(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public Company(int id, String name, Set<Project> projects) {
         this.id = id;
         this.name = name;
         this.projects = projects;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -39,10 +44,6 @@ public class Company {
 
     @Override
     public String toString() {
-        return "Company{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", projects=" + projects +
-                '}';
+        return name + ", ";
     }
 }

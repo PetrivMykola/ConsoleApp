@@ -1,20 +1,22 @@
 package main.java.net.petriv.developer.dao;
 
-import main.java.net.petriv.developer.exceptions.*;
+import main.java.net.petriv.developer.exceptions.EmptyFileException;
+import main.java.net.petriv.developer.exceptions.NotFoundIdException;
 import main.java.net.petriv.developer.model.Developer;
-import main.java.net.petriv.developer.model.Skill;
+import main.java.net.petriv.developer.model.Project;
+import main.java.net.petriv.developer.model.Team;
 
 import java.io.*;
 import java.util.*;
 
-public class DeveloperDAOImp implements DAO<Developer> {
+public class ProjectDAO implements DAO<Project> {
 
-    static File file;
-    String path = ".\\resources\\developers.txt";
-    List<Developer> listDev;
+    File file;
+    String path = ".\\resources\\projects.txt";
+    List<Project> listProject;
     Checker checker;
 
-    public DeveloperDAOImp() {
+    public ProjectDAO() {
         checker = new Checker(path);
         file = new File(path);
         try {
@@ -25,26 +27,27 @@ public class DeveloperDAOImp implements DAO<Developer> {
     }
 
     @Override
-    public void save(Developer v) {
+    public void save(Project v) {
         checker.checkId(v.getId());
+
         try(FileWriter writer = new FileWriter(file, true)) {
-            writer.write(v.getId() + ", " + v.getFirstName() +
-                    ", " + v.getLastName() + ", " + v.getSpecialty() + ", " +
-                     + v.getSalary() + ", " + "Skills: " + listSkills(v.getSkills()) + System.lineSeparator());
+            writer.write(v.getId() + ", " + v.getName() + ", " +
+                    "Teams: " + listTeams(v.getTeams()) + System.lineSeparator());
             writer.flush();
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-
-
     }
 
     @Override
-    public Developer getById(int id) {
+    public Project getById(int id) {
+
         String line = "";
         String readLine = "";
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+
+            checker.checkId(id);
 
             while ((line = reader.readLine()) != null) {
                 if (Character.getNumericValue(line.charAt(0)) == id) {
@@ -54,25 +57,25 @@ public class DeveloperDAOImp implements DAO<Developer> {
         } catch (IOException | NullPointerException | NotFoundIdException e) {
             System.out.println(e.getMessage());
         }
-        return createDevFromStr(readLine);
+        return createProjectFromStr(readLine);
     }
 
-
     @Override
-    public List<Developer> getAll() {
+    public List<Project> getAll() {
+
         String line;
-        listDev = new ArrayList<>();
+        listProject = new ArrayList<>();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             checker.checkFile(file);
 
             while ((line = reader.readLine()) != null) {
-                listDev.add(createDevFromStr(line));
+                listProject.add(createProjectFromStr(line));
             }
         } catch (IOException | EmptyFileException e) {
             System.out.println(e.getMessage());
         }
-        return listDev;
+        return listProject;
     }
 
     @Override
@@ -101,59 +104,76 @@ public class DeveloperDAOImp implements DAO<Developer> {
         if (!file.delete()) System.out.println("Cannot delete file");
         if (!tempFile.renameTo(file)) System.out.println("Cannot rename file");
 
+
     }
 
     @Override
-    public void update(Developer v) {
+    public void update(Project v) {
         try {
             if(checker.isExistEntityInFileById(v.getId())) {
                 delete(v.getId());
-                Developer newDev = v;
-                save(newDev);
+                Project newProject = v;
+                save(newProject);
 
             } else throw new NotFoundIdException("Cannot find developers in file for update");
         } catch (EmptyFileException | NotFoundIdException e) {
             System.out.println(e.getMessage());
         }
+
     }
 
-    public Developer createDevFromStr(String str) {
-        String[] arrayWords = str.split(", ");
-        Developer dev = new Developer(Integer.valueOf(arrayWords[0]), arrayWords[1], arrayWords[2],
-                arrayWords[3], Integer.valueOf(arrayWords[4]));   // setDev.add(arrayWords[5]));
-        return dev;
-    }
-
-    public Set<Skill> getSkillsForDeveloper(String devSkills) {
-        String[] arrayIdSkills = devSkills.split(", ");
+    public Set<Team> getTeamsForProject(String teamId) {
+        teamId.trim();
+        TeamDAO teamDAO = new TeamDAO();
+        teamId = teamId.replaceAll("[^a-zA-Z0-9]", " ");
+        String[] arrayIdTeam = teamId.split(" ");
         String line = "";
-        String readLine = "";
-        Set<Skill> skillSet = new HashSet<>();
-        int i = 0;
+        Set<Team> teamSet = new HashSet<>();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(".\\resources\\skils.txt"))) {
 
-                while ((line = reader.readLine()) != null & (i < arrayIdSkills.length) ) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(".\\resources\\teams.txt"))) {
 
-                        if (Character.getNumericValue(line.charAt(0)) ==  Integer.valueOf(arrayIdSkills[i])) {
-                            readLine = line;
-                            String[] arrayWords = readLine.split(", ");
-                            skillSet.add(new Skill(Integer.valueOf(arrayWords[0]), arrayWords[1]));
-                            i++;
-                        }
+            while ((line = reader.readLine()) != null) {
+                if (line == null) break;
+
+                line = line.replaceAll("[^a-zA-Z0-9]", " ");
+                line.trim();
+                String arrReadLine[] = line.split("  ");
+
+                for (String s : arrayIdTeam) {
+
+                    if (s.equalsIgnoreCase(arrReadLine[0]))
+                        teamSet.add(teamDAO.createTeamFromStr(line));
                 }
-            } catch(IOException | NullPointerException | NotFoundIdException | IndexOutOfBoundsException e){
-                System.out.println(e.getMessage());
             }
-        return skillSet;
+        } catch (IOException | NullPointerException | NotFoundIdException | IndexOutOfBoundsException e) {
+            System.out.println(e.getMessage());
+        }
+        return teamSet;
     }
 
-    public String listSkills(Set<Skill> skillSet) {
-        String skill="";
-        for (Iterator iter = skillSet.iterator(); iter.hasNext();) {
-            skill += iter.next();
+    public String listTeams(Set<Team> teamSet) {
+        String project = "";
+        for (Team s : teamSet)
+            project += s.getId() + ", ".toString();
+        return project;
+    }
+
+    public Project createProjectFromStr(String str) {
+        String devId = "";
+        str = str.replaceAll("[^a-zA-Z0-9]", " ");
+        str.trim();
+        String[] arrayWords = str.split("  ");
+
+        if (arrayWords.length >=4) {
+
+            for (int i = 3; i <= arrayWords.length - 1; i++)
+                devId += arrayWords[i] + " ";
         }
-        return skill;
+
+        Project project = new Project(Integer.valueOf(arrayWords[0]), arrayWords[1]);
+        project.setTeams(getTeamsForProject(devId.trim()));
+
+        return project;
     }
 }
-

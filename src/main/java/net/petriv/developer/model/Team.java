@@ -3,21 +3,26 @@ package main.java.net.petriv.developer.model;
 import java.util.Set;
 
 public class Team {
-    private Long id;
+    private int id;
     private String name;
     private Set<Developer> developers;
 
-    public Team(Long id, String name, Set<Developer> developers) {
+    public Team(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public Team(int id, String name, Set<Developer> developers) {
         this.id = id;
         this.name = name;
         this.developers = developers;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -42,7 +47,7 @@ public class Team {
         return "Team{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", developers=" + developers +
+                ", developers: " + developers +
                 '}';
     }
 }

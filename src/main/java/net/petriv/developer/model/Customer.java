@@ -3,13 +3,22 @@ package main.java.net.petriv.developer.model;
 import java.util.Set;
 
 public class Customer {
-    private Long id;
+    private int id;
     private String firstName;
     private String lastName;
     private String address;
     private Set<Project> projects;
 
-    public Customer(Long id, String firstName, String lastName, String address, Set<Project> projects) {
+
+
+    public Customer(int id, String firstName, String lastName, String address) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.address = address;
+    }
+
+    public Customer(int id, String firstName, String lastName, String address, Set<Project> projects) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -17,11 +26,11 @@ public class Customer {
         this.projects = projects;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -59,13 +68,7 @@ public class Customer {
 
     @Override
     public String toString() {
-        return "CustomerDAOImp{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", address='" + address + '\'' +
-                ", projects=" + projects +
-                '}';
+        return firstName + " " + lastName + " " + address + ", ";
     }
 }
 
