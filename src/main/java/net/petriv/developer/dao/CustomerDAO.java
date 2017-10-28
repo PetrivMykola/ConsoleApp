@@ -4,8 +4,6 @@ import main.java.net.petriv.developer.exceptions.EmptyFileException;
 import main.java.net.petriv.developer.exceptions.NotFoundIdException;
 import main.java.net.petriv.developer.model.Company;
 import main.java.net.petriv.developer.model.Customer;
-import main.java.net.petriv.developer.model.Developer;
-import main.java.net.petriv.developer.model.Project;
 
 import java.io.*;
 import java.util.*;
@@ -33,7 +31,7 @@ public class CustomerDAO implements DAO<Customer> {
 
         try (FileWriter writer = new FileWriter(file, true)) {
             writer.write(v.getId() + ", " + v.getFirstName() + ", " + v.getLastName() + ", " + v.getAddress() +
-                  ", " + "Projects: " + listCustomers(v.getProjects()) + System.lineSeparator());
+                  ", " + "Companies: " + listCompanies(v.getCompanies()) + System.lineSeparator());
             writer.flush();
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -45,15 +43,19 @@ public class CustomerDAO implements DAO<Customer> {
     public Customer getById(int id) {
         String line = "";
         String readLine = "";
-
+        String arrWords[];
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
 
-            checker.checkId(id);
+           // checker.checkId(id);
 
             while ((line = reader.readLine()) != null) {
-                if (Character.getNumericValue(line.charAt(0)) == id) {
+                line = line.replaceAll("[^a-zA-Z0-9]", " ");
+                line.trim();
+                arrWords = line.split("  ");
+
+                if (Integer.valueOf(arrWords[0]) == id) {
                     readLine = line;
-                } else throw new NotFoundIdException("Id does not exist in file");
+                }
             }
         } catch (IOException | NullPointerException | NotFoundIdException e) {
             System.out.println(e.getMessage());
@@ -120,45 +122,59 @@ public class CustomerDAO implements DAO<Customer> {
         }
     }
 
-
-
-
-    public String listCustomers(Set<Project> projectSet) {
-        String customers="";
-        for (Iterator iter = projectSet.iterator(); iter.hasNext();) {
-            customers += iter.next();
-        }
-        return customers;
+    public String listCompanies(Set<Company> customerSet) {
+        String companies="";
+        for (Company s : customerSet)
+            companies += s.getId() + ", ".toString();
+        return companies;
     }
 
     public Customer createCustomerFromStr(String str) {
-        String[] arrayWords = str.split(", ");
-        Customer newCustomer = new Customer(Integer.valueOf(arrayWords[0]), arrayWords[1], arrayWords[2], arrayWords[3]);
-        return newCustomer;
+        String customerId = "";
+        str = str.replaceAll("[^a-zA-Z0-9]", " ");
+        str.trim();
+        String[] arrayWords = str.split("  ");
+
+        if (arrayWords.length >=6) {
+
+            for (int i = 5; i <= arrayWords.length - 1; i++)
+                customerId += arrayWords[i] + " ";
+        }
+
+        Customer customer = new Customer(Integer.valueOf(arrayWords[0]), arrayWords[1], arrayWords[2] , arrayWords[3]);
+        customer.setCompanies(getCompanyForCustomer(customerId.trim()));
+
+        return customer;
     }
 
-    public Set<Project> getProjectsForCustomer(String dev) {
-        String[] arrayIdSkills = dev.split(", ");
+    public Set<Company> getCompanyForCustomer(String companyId) {
+        companyId.trim();
+        CompanyDAO companyDAO = new CompanyDAO();
+        companyId = companyId.replaceAll("[^a-zA-Z0-9]", " ");
+        String[] arrayIdTeam = companyId.split(" ");
         String line = "";
-        String readLine = "";
-        Set<Project> projectSet = new HashSet<>();
-        int i = 0;
+        Set<Company> companySet = new HashSet<>();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(".\\resources\\projects.txt"))) {
 
-            while ((line = reader.readLine()) != null & (i < arrayIdSkills.length) ) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(".\\resources\\companys.txt"))) {
 
-                if (Character.getNumericValue(line.charAt(0)) ==  Integer.valueOf(arrayIdSkills[i])) {
-                    readLine = line;
-                    String[] arrayWords = readLine.split(", ");
-                    projectSet.add(new Project(Integer.valueOf(arrayWords[0]), arrayWords[1]));
-                    i++;
+            while ((line = reader.readLine()) != null) {
+                if (line == null) break;
+
+                line = line.replaceAll("[^a-zA-Z0-9]", " ");
+                line.trim();
+                String arrReadLine[] = line.split("  ");
+
+                for (String s : arrayIdTeam) {
+
+                    if (s.equalsIgnoreCase(arrReadLine[0]))
+                        companySet.add(companyDAO.createCompanyFromStr(line));
                 }
             }
-        } catch(IOException | NullPointerException | NotFoundIdException | IndexOutOfBoundsException e){
+        } catch (IOException | NullPointerException | NotFoundIdException | IndexOutOfBoundsException e) {
             System.out.println(e.getMessage());
         }
-        return projectSet;
+        return companySet;
     }
 
 

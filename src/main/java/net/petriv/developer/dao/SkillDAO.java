@@ -12,7 +12,7 @@ import java.util.Set;
 public class SkillDAO implements DAO<Skill> {
 
     File file;
-    String path = ".\\resources\\skils.txt";
+    String path = ".\\resources\\skills.txt";
     List<Skill> listSkill;
     Checker checker;
 

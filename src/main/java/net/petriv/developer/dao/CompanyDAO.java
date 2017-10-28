@@ -44,15 +44,20 @@ public class CompanyDAO implements DAO<Company> {
     public Company getById(int id) {
         String line = "";
         String readLine = "";
+        String arrWords[];
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
 
             checker.checkId(id);
 
             while ((line = reader.readLine()) != null) {
-                if (Character.getNumericValue(line.charAt(0)) == id) {
+                line = line.replaceAll("[^a-zA-Z0-9]", " ");
+                line.trim();
+                arrWords = line.split("  ");
+
+                if (Integer.valueOf(arrWords[0]) == id) {
                     readLine = line;
-                } else throw new NotFoundIdException("Id does not exist in file");
+                }
             }
         } catch (IOException | NullPointerException | NotFoundIdException e) {
             System.out.println(e.getMessage());

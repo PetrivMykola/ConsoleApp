@@ -7,6 +7,9 @@ public class Company {
     private String name;
     private Set<Project> projects;
 
+    public Company() {
+    }
+
     public Company(int id, String name) {
         this.id = id;
         this.name = name;
@@ -44,6 +47,10 @@ public class Company {
 
     @Override
     public String toString() {
-        return name + ", ";
+        return "Company{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", projects=" + projects +
+                '}';
     }
 }

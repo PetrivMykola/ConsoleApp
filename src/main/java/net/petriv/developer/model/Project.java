@@ -7,6 +7,9 @@ public class Project {
     private String name;
     private Set<Team> teams;
 
+    public Project() {
+    }
+
     public Project(int id, String name) {
         this.id = id;
         this.name = name;
@@ -44,6 +47,10 @@ public class Project {
 
     @Override
     public String toString() {
-        return name + ", ";
+        return
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", teams=" + teams +
+                '}';
     }
 }

@@ -12,6 +12,9 @@ public class Developer {
     private Set<Skill> skills;
     private int salary;
 
+    public Developer() {
+    }
+
     public Developer(int id, String firstName, String lastName) {
         this.id = id;
         this.firstName = firstName;

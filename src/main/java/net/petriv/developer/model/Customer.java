@@ -7,9 +7,10 @@ public class Customer {
     private String firstName;
     private String lastName;
     private String address;
-    private Set<Project> projects;
+    private Set<Company> companies;
 
-
+    public Customer() {
+    }
 
     public Customer(int id, String firstName, String lastName, String address) {
         this.id = id;
@@ -18,12 +19,12 @@ public class Customer {
         this.address = address;
     }
 
-    public Customer(int id, String firstName, String lastName, String address, Set<Project> projects) {
+    public Customer(int id, String firstName, String lastName, String address, Set<Company> projects) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
-        this.projects = projects;
+        this.companies = projects;
     }
 
     public int getId() {
@@ -58,17 +59,23 @@ public class Customer {
         this.address = address;
     }
 
-    public Set<Project> getProjects() {
-        return projects;
+    public Set<Company> getCompanies() {
+        return companies;
     }
 
-    public void setProjects(Set<Project> projects) {
-        this.projects = projects;
+    public void setCompanies(Set<Company> companies) {
+        this.companies = companies;
     }
 
     @Override
     public String toString() {
-        return firstName + " " + lastName + " " + address + ", ";
+        return "Customer{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", address='" + address + '\'' +
+                ", companies=" + companies +
+                '}';
     }
 }
 

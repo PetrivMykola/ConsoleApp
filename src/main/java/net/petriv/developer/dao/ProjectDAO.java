@@ -47,7 +47,7 @@ public class ProjectDAO implements DAO<Project> {
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
 
-            checker.checkId(id);
+          //   checker.checkId(id);
 
             while ((line = reader.readLine()) != null) {
                 if (Character.getNumericValue(line.charAt(0)) == id) {

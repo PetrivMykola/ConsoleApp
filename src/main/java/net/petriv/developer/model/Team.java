@@ -7,6 +7,9 @@ public class Team {
     private String name;
     private Set<Developer> developers;
 
+    public Team() {
+    }
+
     public Team(int id, String name) {
         this.id = id;
         this.name = name;
@@ -44,7 +47,7 @@ public class Team {
 
     @Override
     public String toString() {
-        return "Team{" +
+        return
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", developers: " + developers +
