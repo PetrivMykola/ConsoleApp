@@ -3,12 +3,11 @@ package main.java.net.petriv.developer.dao;
 import main.java.net.petriv.developer.exceptions.*;
 import main.java.net.petriv.developer.model.Developer;
 import main.java.net.petriv.developer.model.Skill;
-import main.java.net.petriv.developer.model.Team;
 
 import java.io.*;
 import java.util.*;
 
-public class DeveloperDAO implements DAO<Developer> {
+public class DeveloperDAO implements GeneralDAO<Developer> {
 
     static File file;
     String path = ".\\resources\\developers.txt";
@@ -28,10 +27,11 @@ public class DeveloperDAO implements DAO<Developer> {
     @Override
     public void save(Developer v) {
         checker.checkId(v.getId());
-        try(FileWriter writer = new FileWriter(file, true)) {
+
+        try (FileWriter writer = new FileWriter(file, true)) {
             writer.write(v.getId() + ", " + v.getFirstName() +
                     ", " + v.getLastName() + ", " + v.getSpecialty() + ", " +
-                    + v.getSalary() + ", " + "Skills: " + listSkills(v.getSkills()) + System.lineSeparator());
+                    +v.getSalary() + ", " + "Skills: " + listSkills(v.getSkills()) + System.lineSeparator());
             writer.flush();
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -103,7 +103,7 @@ public class DeveloperDAO implements DAO<Developer> {
                     }
                 }
             } else throw new NotFoundIdException("Cannot find id in file for delete Developer");
-        } catch (IOException | EmptyFileException  | NotFoundIdException e) {
+        } catch (IOException | EmptyFileException | NotFoundIdException e) {
             System.out.println(e.getMessage());
         }
 
@@ -115,7 +115,7 @@ public class DeveloperDAO implements DAO<Developer> {
     @Override
     public void update(Developer v) {
         try {
-            if(checker.isExistEntityInFileById(v.getId())) {
+            if (checker.isExistEntityInFileById(v.getId())) {
                 delete(v.getId());
                 Developer newDev = v;
                 save(newDev);
@@ -131,14 +131,14 @@ public class DeveloperDAO implements DAO<Developer> {
         str = str.replaceAll("[^a-zA-Z0-9]", " ");
         str.trim();
         String[] arrayWords = str.split("  ");
-        if (arrayWords.length >=7) {
+        if (arrayWords.length >= 7) {
             for (int i = 6; i <= arrayWords.length - 1; i++)
                 devId += arrayWords[i] + " ";
 
         }
 
         Developer developer = new Developer(Integer.valueOf(arrayWords[0]), arrayWords[1],
-                                            arrayWords[2], arrayWords[3], Integer.valueOf(arrayWords[4]));
+                arrayWords[2], arrayWords[3], Integer.valueOf(arrayWords[4]));
         developer.setSkills(getSkillsForDeveloper(devId.trim()));
 
         return developer;

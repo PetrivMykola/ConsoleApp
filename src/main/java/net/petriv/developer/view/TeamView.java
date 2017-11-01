@@ -28,22 +28,27 @@ public class TeamView {
             case 4:
                 teamController.deleteTeam();
                 break;
+            case 5:
+                MainView mainView = new MainView();
+                mainView.mainMenu();
+                break;
         }
         menu();
     }
 
-    public void menu(){
+    public void menu() {
         try {
             System.out.println("*************************************");
-            System.out.println(" 1 - Create New Developer And Save: ");
-            System.out.println(" 2 - Show List Developers in File:");
-            System.out.println(" 3 - Update Developer:");
-            System.out.println(" 4 - Delete Developer:");
+            System.out.println(" 1 - Create New Team And Save: ");
+            System.out.println(" 2 - Show List Teams in File:");
+            System.out.println(" 3 - Update Team:");
+            System.out.println(" 4 - Delete Team:");
+            System.out.println(" 5 - Main menu:");
             System.out.println("***Please Enter Number Of Your Choise:***");
             choice = in.nextInt();
             action(choice);
 
-        } catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             menu();
         }

@@ -7,9 +7,8 @@ import main.java.net.petriv.developer.model.Skill;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-public class SkillDAO implements DAO<Skill> {
+public class SkillDAO implements GeneralDAO<Skill> {
 
     File file;
     String path = ".\\resources\\skills.txt";
@@ -28,7 +27,9 @@ public class SkillDAO implements DAO<Skill> {
 
     @Override
     public void save(Skill v) {
-        try(FileWriter writer = new FileWriter(file, true)) {
+        checker.checkId(v.getId());
+
+        try (FileWriter writer = new FileWriter(file, true)) {
             writer.write(v.getId() + ", " + v.getName() + System.lineSeparator());
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -41,17 +42,20 @@ public class SkillDAO implements DAO<Skill> {
     public Skill getById(int id) {
         String line = "";
         String readLine = "";
-        checker.checkId(id);
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
 
-            while ((line = reader.readLine()) != null) {
-                if (Character.getNumericValue(line.charAt(0)) == id) {
-                    readLine = line;
-                } else throw new NotFoundIdException("Id does not exist in file");
+        if (checker.isExistEntityInFileById(id)) {
+
+            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+
+                while ((line = reader.readLine()) != null) {
+                    if (Character.getNumericValue(line.charAt(0)) == id) {
+                        readLine = line;
+                    } else throw new NotFoundIdException("Id does not exist in file");
+                }
+            } catch (IOException | NullPointerException | NotFoundIdException e) {
+                System.out.println(e.getMessage());
             }
-        } catch (IOException | NullPointerException | NotFoundIdException e) {
-            System.out.println(e.getMessage());
-        }
+        } else throw new NotFoundIdException("Can not find entity in file by id");
         return createSkillFromStr(readLine);
     }
 
@@ -91,7 +95,7 @@ public class SkillDAO implements DAO<Skill> {
                     }
                 }
             } else throw new NotFoundIdException("Cannot find id in file for delete Developer");
-        } catch (IOException | EmptyFileException  | NotFoundIdException e) {
+        } catch (IOException | EmptyFileException | NotFoundIdException e) {
             System.out.println(e.getMessage());
         }
 
@@ -103,7 +107,7 @@ public class SkillDAO implements DAO<Skill> {
     @Override
     public void update(Skill v) {
         try {
-            if(checker.isExistEntityInFileById(v.getId())) {
+            if (checker.isExistEntityInFileById(v.getId())) {
                 delete(v.getId());
                 Skill newDev = v;
                 save(newDev);

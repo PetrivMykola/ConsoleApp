@@ -30,7 +30,7 @@ public class CustomerController {
         System.out.println("Enter id Company for update: ");
         int id = in.nextInt();
         System.out.println("Company for udate: " + dao.getById(id));
-        Customer newCustomer = enterFieldsForCompany(dao.getById(id));
+        Customer newCustomer = enterFieldsForCustomer(dao.getById(id));
         dao.update(newCustomer);
         System.out.println("###################################");
     }
@@ -47,8 +47,12 @@ public class CustomerController {
         System.out.println("Enter id:");
         customer.setId(in.nextInt());
         System.out.println("Enter name:");
-        customer.setName(in.next());
-        System.out.println("Enter id projects for company: ");
+        customer.setFirstName(in.next());
+        System.out.println("Enter Last name:");
+        customer.setLastName(in.next());
+        System.out.println("Enter address:");
+        customer.setAddress(in.next());
+        System.out.println("Enter id company for customer: ");
         customer.setCompanies(dao.getCompanyForCustomer(in.next()));
         return customer;
     }
@@ -57,8 +61,12 @@ public class CustomerController {
         System.out.println("Enter id:");
         customer.setId(in.nextInt());
         System.out.println("Enter name:");
-        customer.setName(in.next());
-        System.out.println("Enter id project for company: ");
+        customer.setFirstName(in.next());
+        System.out.println("Enter Last name:");
+        customer.setLastName(in.next());
+        System.out.println("Enter address:");
+        customer.setAddress(in.next());
+        System.out.println("Enter id company for customer: ");
         customer.setCompanies(dao.getCompanyForCustomer(in.next()));
         return customer;
     }

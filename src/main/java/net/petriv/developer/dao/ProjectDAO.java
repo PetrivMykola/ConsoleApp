@@ -2,14 +2,13 @@ package main.java.net.petriv.developer.dao;
 
 import main.java.net.petriv.developer.exceptions.EmptyFileException;
 import main.java.net.petriv.developer.exceptions.NotFoundIdException;
-import main.java.net.petriv.developer.model.Developer;
 import main.java.net.petriv.developer.model.Project;
 import main.java.net.petriv.developer.model.Team;
 
 import java.io.*;
 import java.util.*;
 
-public class ProjectDAO implements DAO<Project> {
+public class ProjectDAO implements GeneralDAO<Project> {
 
     File file;
     String path = ".\\resources\\projects.txt";
@@ -30,7 +29,7 @@ public class ProjectDAO implements DAO<Project> {
     public void save(Project v) {
         checker.checkId(v.getId());
 
-        try(FileWriter writer = new FileWriter(file, true)) {
+        try (FileWriter writer = new FileWriter(file, true)) {
             writer.write(v.getId() + ", " + v.getName() + ", " +
                     "Teams: " + listTeams(v.getTeams()) + System.lineSeparator());
             writer.flush();
@@ -45,24 +44,24 @@ public class ProjectDAO implements DAO<Project> {
         String line = "";
         String readLine = "";
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+        if (checker.isExistEntityInFileById(id)) {
 
-          //   checker.checkId(id);
+            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
 
-            while ((line = reader.readLine()) != null) {
-                if (Character.getNumericValue(line.charAt(0)) == id) {
-                    readLine = line;
-                } else throw new NotFoundIdException("Id does not exist in file");
+                while ((line = reader.readLine()) != null) {
+                    if (Character.getNumericValue(line.charAt(0)) == id) {
+                        readLine = line;
+                    } else throw new NotFoundIdException("Id does not exist in file");
+                }
+            } catch (IOException | NullPointerException | NotFoundIdException e) {
+                System.out.println(e.getMessage());
             }
-        } catch (IOException | NullPointerException | NotFoundIdException e) {
-            System.out.println(e.getMessage());
-        }
+        } else throw new NotFoundIdException("Can not find entity in file by id");
         return createProjectFromStr(readLine);
     }
 
     @Override
     public List<Project> getAll() {
-
         String line;
         listProject = new ArrayList<>();
 
@@ -97,7 +96,7 @@ public class ProjectDAO implements DAO<Project> {
                     }
                 }
             } else throw new NotFoundIdException("Cannot find id in file for delete Developer");
-        } catch (IOException | EmptyFileException  | NotFoundIdException e) {
+        } catch (IOException | EmptyFileException | NotFoundIdException e) {
             System.out.println(e.getMessage());
         }
 
@@ -110,7 +109,7 @@ public class ProjectDAO implements DAO<Project> {
     @Override
     public void update(Project v) {
         try {
-            if(checker.isExistEntityInFileById(v.getId())) {
+            if (checker.isExistEntityInFileById(v.getId())) {
                 delete(v.getId());
                 Project newProject = v;
                 save(newProject);
@@ -165,7 +164,7 @@ public class ProjectDAO implements DAO<Project> {
         str.trim();
         String[] arrayWords = str.split("  ");
 
-        if (arrayWords.length >=4) {
+        if (arrayWords.length >= 4) {
 
             for (int i = 3; i <= arrayWords.length - 1; i++)
                 devId += arrayWords[i] + " ";

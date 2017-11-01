@@ -3,14 +3,12 @@ package main.java.net.petriv.developer.dao;
 import main.java.net.petriv.developer.exceptions.EmptyFileException;
 import main.java.net.petriv.developer.exceptions.NotFoundIdException;
 import main.java.net.petriv.developer.model.Company;
-import main.java.net.petriv.developer.model.Developer;
 import main.java.net.petriv.developer.model.Project;
-import main.java.net.petriv.developer.model.Team;
 
 import java.io.*;
 import java.util.*;
 
-public class CompanyDAO implements DAO<Company> {
+public class CompanyDAO implements GeneralDAO<Company> {
 
     File file;
     String path = ".\\resources\\companys.txt";
@@ -31,7 +29,7 @@ public class CompanyDAO implements DAO<Company> {
     public void save(Company v) {
         checker.checkId(v.getId());
 
-        try(FileWriter writer = new FileWriter(file, true)) {
+        try (FileWriter writer = new FileWriter(file, true)) {
             writer.write(v.getId() + ", " + v.getName() + ", " +
                     "Projects: " + listProjecs(v.getProjects()) + System.lineSeparator());
             writer.flush();
@@ -46,22 +44,24 @@ public class CompanyDAO implements DAO<Company> {
         String readLine = "";
         String arrWords[];
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+        if (checker.isExistEntityInFileById(id)) {
 
-            checker.checkId(id);
+            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
 
-            while ((line = reader.readLine()) != null) {
-                line = line.replaceAll("[^a-zA-Z0-9]", " ");
-                line.trim();
-                arrWords = line.split("  ");
+                while ((line = reader.readLine()) != null) {
+                    line = line.replaceAll("[^a-zA-Z0-9]", " ");
+                    line.trim();
+                    arrWords = line.split("  ");
 
-                if (Integer.valueOf(arrWords[0]) == id) {
-                    readLine = line;
+                    if (Integer.valueOf(arrWords[0]) == id) {
+                        readLine = line;
+                    }
                 }
+            } catch (IOException | NullPointerException | NotFoundIdException e) {
+                System.out.println(e.getMessage());
             }
-        } catch (IOException | NullPointerException | NotFoundIdException e) {
-            System.out.println(e.getMessage());
-        }
+        } else throw new NotFoundIdException("Can not find entity in file by id");
+
         return createCompanyFromStr(readLine);
     }
 
@@ -101,7 +101,7 @@ public class CompanyDAO implements DAO<Company> {
                     }
                 }
             } else throw new NotFoundIdException("Cannot find id in file for delete Developer");
-        } catch (IOException | EmptyFileException  | NotFoundIdException e) {
+        } catch (IOException | EmptyFileException | NotFoundIdException e) {
             System.out.println(e.getMessage());
         }
 
@@ -113,7 +113,7 @@ public class CompanyDAO implements DAO<Company> {
     @Override
     public void update(Company v) {
         try {
-            if(checker.isExistEntityInFileById(v.getId())) {
+            if (checker.isExistEntityInFileById(v.getId())) {
                 delete(v.getId());
                 Company newCompany = v;
                 save(newCompany);
@@ -167,7 +167,7 @@ public class CompanyDAO implements DAO<Company> {
         str.trim();
         String[] arrayWords = str.split("  ");
 
-        if (arrayWords.length >=4) {
+        if (arrayWords.length >= 4) {
 
             for (int i = 3; i <= arrayWords.length - 1; i++)
                 devId += arrayWords[i] + " ";

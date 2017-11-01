@@ -8,7 +8,7 @@ import main.java.net.petriv.developer.model.Customer;
 import java.io.*;
 import java.util.*;
 
-public class CustomerDAO implements DAO<Customer> {
+public class CustomerDAO implements GeneralDAO<Customer> {
 
     File file;
     String path = ".\\resources\\customers.txt";
@@ -31,7 +31,7 @@ public class CustomerDAO implements DAO<Customer> {
 
         try (FileWriter writer = new FileWriter(file, true)) {
             writer.write(v.getId() + ", " + v.getFirstName() + ", " + v.getLastName() + ", " + v.getAddress() +
-                  ", " + "Companies: " + listCompanies(v.getCompanies()) + System.lineSeparator());
+                    ", " + "Companies: " + listCompanies(v.getCompanies()) + System.lineSeparator());
             writer.flush();
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -44,22 +44,24 @@ public class CustomerDAO implements DAO<Customer> {
         String line = "";
         String readLine = "";
         String arrWords[];
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
 
-           // checker.checkId(id);
+        if (checker.isExistEntityInFileById(id)) {
 
-            while ((line = reader.readLine()) != null) {
-                line = line.replaceAll("[^a-zA-Z0-9]", " ");
-                line.trim();
-                arrWords = line.split("  ");
+            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
 
-                if (Integer.valueOf(arrWords[0]) == id) {
-                    readLine = line;
+                while ((line = reader.readLine()) != null) {
+                    line = line.replaceAll("[^a-zA-Z0-9]", " ");
+                    line.trim();
+                    arrWords = line.split("  ");
+
+                    if (Integer.valueOf(arrWords[0]) == id) {
+                        readLine = line;
+                    }
                 }
+            } catch (IOException | NullPointerException | NotFoundIdException e) {
+                System.out.println(e.getMessage());
             }
-        } catch (IOException | NullPointerException | NotFoundIdException e) {
-            System.out.println(e.getMessage());
-        }
+        } else throw new NotFoundIdException("Can not find entity in file by id");
         return createCustomerFromStr(readLine);
     }
 
@@ -123,7 +125,7 @@ public class CustomerDAO implements DAO<Customer> {
     }
 
     public String listCompanies(Set<Company> customerSet) {
-        String companies="";
+        String companies = "";
         for (Company s : customerSet)
             companies += s.getId() + ", ".toString();
         return companies;
@@ -135,13 +137,13 @@ public class CustomerDAO implements DAO<Customer> {
         str.trim();
         String[] arrayWords = str.split("  ");
 
-        if (arrayWords.length >=6) {
+        if (arrayWords.length >= 6) {
 
             for (int i = 5; i <= arrayWords.length - 1; i++)
                 customerId += arrayWords[i] + " ";
         }
 
-        Customer customer = new Customer(Integer.valueOf(arrayWords[0]), arrayWords[1], arrayWords[2] , arrayWords[3]);
+        Customer customer = new Customer(Integer.valueOf(arrayWords[0]), arrayWords[1], arrayWords[2], arrayWords[3]);
         customer.setCompanies(getCompanyForCustomer(customerId.trim()));
 
         return customer;

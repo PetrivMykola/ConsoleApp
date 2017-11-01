@@ -2,7 +2,7 @@ package main.java.net.petriv.developer.dao;
 
 import java.util.List;
 
-public interface DAO<T> {
+public interface GeneralDAO<T> {
 
         void save(T v);
 

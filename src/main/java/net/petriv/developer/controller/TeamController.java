@@ -1,7 +1,6 @@
 package main.java.net.petriv.developer.controller;
 
 import main.java.net.petriv.developer.dao.TeamDAO;
-import main.java.net.petriv.developer.model.Skill;
 import main.java.net.petriv.developer.model.Team;
 
 import java.util.Scanner;

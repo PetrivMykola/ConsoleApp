@@ -28,22 +28,27 @@ public class SkillView {
             case 4:
                 skillController.deleteSkill();
                 break;
+            case 5:
+                MainView mainView = new MainView();
+                mainView.mainMenu();
+                break;
         }
         menu();
     }
 
-    public void menu(){
+    public void menu() {
         try {
             System.out.println("*************************************");
             System.out.println(" 1 - Create New Skill And Save: ");
             System.out.println(" 2 - Show List Skill in File:");
             System.out.println(" 3 - Update Skill:");
             System.out.println(" 4 - Delete Skill:");
+            System.out.println(" 5 - Main menu:");
             System.out.println("***Please Enter Number Of Your Choise:***");
             choice = in.nextInt();
             action(choice);
 
-        } catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             menu();
         }

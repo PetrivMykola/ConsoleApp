@@ -8,7 +8,7 @@ import main.java.net.petriv.developer.model.Team;
 import java.io.*;
 import java.util.*;
 
-public class TeamDAO implements DAO<Team> {
+public class TeamDAO implements GeneralDAO<Team> {
 
     File file;
     String path = ".\\resources\\teams.txt";
@@ -27,11 +27,11 @@ public class TeamDAO implements DAO<Team> {
 
     @Override
     public void save(Team v) {
-       checker.checkId(v.getId());
+        checker.checkId(v.getId());
 
-        try(FileWriter writer = new FileWriter(file, true)) {
+        try (FileWriter writer = new FileWriter(file, true)) {
             writer.write(v.getId() + ", " + v.getName() + ", " +
-                     "Developers: " + listTeams(v.getDevelopers()) + System.lineSeparator());
+                    "Developers: " + listTeams(v.getDevelopers()) + System.lineSeparator());
             writer.flush();
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -67,7 +67,6 @@ public class TeamDAO implements DAO<Team> {
 
     @Override
     public List<Team> getAll() {
-
         String line;
         listDev = new ArrayList<>();
 
@@ -102,7 +101,7 @@ public class TeamDAO implements DAO<Team> {
                     }
                 }
             } else throw new NotFoundIdException("Cannot find id in file for delete Developer");
-        } catch (IOException | EmptyFileException  | NotFoundIdException e) {
+        } catch (IOException | EmptyFileException | NotFoundIdException e) {
             System.out.println(e.getMessage());
         }
 
@@ -115,7 +114,7 @@ public class TeamDAO implements DAO<Team> {
     @Override
     public void update(Team v) {
         try {
-            if(checker.isExistEntityInFileById(v.getId())) {
+            if (checker.isExistEntityInFileById(v.getId())) {
                 delete(v.getId());
                 Team newTeam = v;
                 save(newTeam);
@@ -170,7 +169,7 @@ public class TeamDAO implements DAO<Team> {
         str.trim();
         String[] arrayWords = str.split("  ");
 
-        if (arrayWords.length >=4) {
+        if (arrayWords.length >= 4) {
 
             for (int i = 3; i <= arrayWords.length - 1; i++)
                 devId += arrayWords[i] + " ";

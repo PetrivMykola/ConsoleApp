@@ -1,25 +1,23 @@
 package main.java.net.petriv.developer.view;
 
-import main.java.net.petriv.developer.dao.SkillDAO;
-
 import java.util.Scanner;
 
 public class MainView {
-    DeveloperView developerViewv;
-    SkillView skillViewv;
-    TeamView teamViewv;
-    ProjectView projectViewv;
-    CompanyView companyViewv;
-    CustomerView customerViewv;
+    DeveloperView developerView;
+    SkillView skillView;
+    TeamView teamView;
+    ProjectView projectView;
+    CompanyView companyView;
+    CustomerView customerView;
 
     public MainView() {
-        developerViewv = new DeveloperView();
-        skillViewv = new SkillView();
-        teamViewv = new TeamView();
-        projectViewv = new ProjectView();
-        companyViewv = new CompanyView();
-        customerViewv = new CustomerView();
-}
+        developerView = new DeveloperView();
+        skillView = new SkillView();
+        teamView = new TeamView();
+        projectView = new ProjectView();
+        companyView = new CompanyView();
+        customerView = new CustomerView();
+    }
 
     Scanner in = new Scanner(System.in);
     int mainChoise;
@@ -32,6 +30,7 @@ public class MainView {
         System.out.println("4. Work with 'Project' ");
         System.out.println("5. Work with 'Company' ");
         System.out.println("6. Work with 'Customer' ");
+        System.out.println("7. 'Exit' ");
         System.out.println("Enter number of your choise: ");
         mainChoise = in.nextInt();
         action(mainChoise);
@@ -41,22 +40,27 @@ public class MainView {
     public void action(int choise) {
         switch (choise) {
             case 1:
-                developerViewv.menu();
+                developerView.menu();
                 break;
             case 2:
-                skillViewv.menu();
+                skillView.menu();
                 break;
             case 3:
+                teamView.menu();
                 break;
             case 4:
+                projectView.menu();
+                break;
+            case 5:
+                companyView.menu();
+                break;
+            case 6:
+                customerView.menu();
+                break;
+            case 7:
+                System.exit(0);
                 break;
         }
-    }
-
-    public static void main(String[] args) {
-        MainView mainView = new MainView();
-        mainView.mainMenu();
-
     }
 
 }
